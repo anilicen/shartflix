@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:shartflix/core/services/logger_service.dart';
+import 'package:shartflix/core/services/secure_storage_service.dart';
 import 'package:shartflix/domain/repositories/user_repository.dart';
 
 class DataUserRepository implements UserRepository {
   final String _baseUrl = 'https://caseapi.servicelabs.tech';
   final Dio _dio = Dio();
   final LoggerService _logger = LoggerService();
+  final ISecureStorageService _secureStorage = SecureStorageService();
+
+  static const String _tokenKey = 'auth_token';
 
   @override
   Future<void> login(String email, String password) async {
@@ -32,7 +36,17 @@ class DataUserRepository implements UserRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         _logger.info('Login successful for email: $email');
-        // TODO: Handle successful login (save token, user data, etc.)
+
+        // Extract and save token from response
+        final responseData = response.data;
+        if (responseData is Map<String, dynamic>) {
+          final token = responseData['data']['token'] as String?;
+
+          if (token != null) {
+            await _secureStorage.write(_tokenKey, token);
+            _logger.debug('Auth token saved successfully');
+          }
+        }
       } else {
         _logger.warning('Login failed with status code: ${response.statusCode}');
         throw Exception('Login failed with status: ${response.statusCode}');
@@ -91,6 +105,17 @@ class DataUserRepository implements UserRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         _logger.info('User registration successful for username: $username');
+
+        // Extract and save token from response
+        final responseData = response.data;
+        if (responseData is Map<String, dynamic>) {
+          final token = responseData['data']['token'] as String?;
+
+          if (token != null) {
+            await _secureStorage.write(_tokenKey, token);
+            _logger.debug('Auth token saved successfully');
+          }
+        }
       } else {
         _logger.warning('Registration failed with status code: ${response.statusCode}');
         throw Exception('Registration failed with status: ${response.statusCode}');
@@ -98,6 +123,38 @@ class DataUserRepository implements UserRepository {
     } catch (e, stackTrace) {
       _logger.error('Failed to register user', e, stackTrace);
       throw Exception('Failed to register user: ${e.toString()}');
+    }
+  }
+
+  // Token management methods
+  Future<String?> getAuthToken() async {
+    try {
+      final token = await _secureStorage.read(_tokenKey);
+      _logger.debug('Retrieved auth token: ${token != null ? 'exists' : 'null'}');
+      return token;
+    } catch (e) {
+      _logger.error('Failed to retrieve auth token', e);
+      return null;
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      await _secureStorage.delete(_tokenKey);
+      _logger.info('User logged out successfully - tokens cleared');
+    } catch (e) {
+      _logger.error('Failed to logout', e);
+      throw Exception('Failed to logout: ${e.toString()}');
+    }
+  }
+
+  Future<bool> isLoggedIn() async {
+    try {
+      final token = await getAuthToken();
+      return token != null && token.isNotEmpty;
+    } catch (e) {
+      _logger.error('Failed to check login status', e);
+      return false;
     }
   }
 }
