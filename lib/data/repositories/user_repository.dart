@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shartflix/core/services/logger_service.dart';
 import 'package:shartflix/core/services/secure_storage_service.dart';
+import 'package:shartflix/domain/entities/user.dart';
 import 'package:shartflix/domain/repositories/user_repository.dart';
 
 class DataUserRepository implements UserRepository {
@@ -8,7 +9,7 @@ class DataUserRepository implements UserRepository {
   final Dio _dio = Dio();
   final LoggerService _logger = LoggerService();
   final ISecureStorageService _secureStorage = SecureStorageService();
-
+  User? _currentUser;
   static const String _tokenKey = 'auth_token';
 
   @override
@@ -46,6 +47,7 @@ class DataUserRepository implements UserRepository {
             await _secureStorage.write(_tokenKey, token);
             _logger.debug('Auth token saved successfully');
           }
+          await getUserProfile(); // Fetch user profile after login
         }
       } else {
         _logger.warning('Login failed with status code: ${response.statusCode}');
@@ -105,6 +107,8 @@ class DataUserRepository implements UserRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         _logger.info('User registration successful for username: $username');
+        _currentUser = User.fromJson(response.data['data'] as Map<String, dynamic>);
+        _logger.debug('Current user profile: ${_currentUser?.toJson()}');
 
         // Extract and save token from response
         final responseData = response.data;
@@ -127,6 +131,7 @@ class DataUserRepository implements UserRepository {
   }
 
   // Token management methods
+  @override
   Future<String?> getAuthToken() async {
     try {
       final token = await _secureStorage.read(_tokenKey);
@@ -138,6 +143,7 @@ class DataUserRepository implements UserRepository {
     }
   }
 
+  @override
   Future<void> logout() async {
     try {
       await _secureStorage.delete(_tokenKey);
@@ -148,6 +154,74 @@ class DataUserRepository implements UserRepository {
     }
   }
 
+  @override
+  Future<Map<String, dynamic>?> getUserProfile() async {
+    final url = '$_baseUrl/user/profile';
+
+    try {
+      // Get the stored auth token
+      final token = await getAuthToken();
+      if (token == null) {
+        _logger.warning('No auth token found for profile request');
+        throw Exception('User not authenticated');
+      }
+
+      _logger.info('Fetching user profile');
+      _logger.debug('Request URL: $url');
+
+      final response = await _dio.get(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      _logger.debug('Profile response: ${response.statusCode} - ${response.data}');
+
+      _currentUser = User.fromJson(response.data['data'] as Map<String, dynamic>);
+      _logger.debug('Current user profile: ${_currentUser?.toJson()}');
+
+      if (response.statusCode == 200) {
+        _logger.info('User profile retrieved successfully');
+        return response.data as Map<String, dynamic>?;
+      } else {
+        _logger.warning('Failed to get profile with status code: ${response.statusCode}');
+        throw Exception('Failed to get profile with status: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        _logger.error('HTTP Error ${e.response!.statusCode}: ${e.response!.statusMessage}');
+        _logger.error('Response data: ${e.response!.data}');
+
+        // More specific error message based on status code
+        String errorMessage = 'Failed to get profile';
+        if (e.response!.statusCode == 401) {
+          errorMessage = 'Unauthorized - please login again';
+          // Clear invalid token
+          await logout();
+        } else if (e.response!.statusCode == 403) {
+          errorMessage = 'Access forbidden';
+        } else if (e.response!.statusCode == 404) {
+          errorMessage = 'Profile not found';
+        } else if (e.response!.statusCode == 500) {
+          errorMessage = 'Server error - please try again later';
+        }
+
+        throw Exception(errorMessage);
+      } else {
+        _logger.error('Network error: ${e.message}', e);
+        throw Exception('Network error: ${e.message}');
+      }
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error during profile fetch', e, stackTrace);
+      throw Exception('Failed to get profile: ${e.toString()}');
+    }
+  }
+
+  @override
   Future<bool> isLoggedIn() async {
     try {
       final token = await getAuthToken();
