@@ -40,6 +40,7 @@ dependencies:
   dio: ^5.8.0+1
   logger: ^2.6.0
   flutter_secure_storage: ^9.2.4
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +65,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/icons/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -93,3 +95,20 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  # Custom fonts
+  fonts:
+    - family: Euclid
+      fonts:
+        - asset: assets/fonts/Euclid-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Euclid-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Euclid-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Euclid-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Euclid-Bold.ttf
+          weight: 700
+
+       
