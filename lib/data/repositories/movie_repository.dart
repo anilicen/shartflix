@@ -16,6 +16,17 @@ class DataMovieRepository implements MovieRepository {
 
   static const String _tokenKey = 'auth_token';
 
+  /// Fixes IMDB URLs by changing HTTPS to HTTP to avoid 403 errors
+  String _fixImdbUrl(String originalUrl) {
+    // If it's an IMDB URL with HTTPS, change it to HTTP
+    if (originalUrl.contains('http://ia.media-imdb.com')) {
+      return originalUrl.replaceFirst('http://', 'https://');
+    }
+
+    // Return original URL if it's not an IMDB HTTPS URL
+    return originalUrl;
+  }
+
   @override
   Future<void> getMovies({int page = 1}) async {
     final url = '$_baseUrl/movie/list/';
@@ -55,7 +66,12 @@ class DataMovieRepository implements MovieRepository {
             final moviesList = moviesData['movies'] as List<dynamic>?;
             if (moviesList != null) {
               for (final movieJson in moviesList) {
-                _movies.add(Movie.fromJson(movieJson as Map<String, dynamic>));
+                final movie = Movie.fromJson(movieJson as Map<String, dynamic>);
+                // Fix IMDB URLs by changing HTTPS to HTTP
+                final fixedMovie = movie.copyWith(
+                  posterUrl: _fixImdbUrl(movie.posterUrl),
+                );
+                _movies.add(fixedMovie);
               }
             }
           }

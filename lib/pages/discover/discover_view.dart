@@ -3,7 +3,6 @@ import 'package:flutter/material.dart' hide View;
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:shartflix/constants.dart';
 import 'package:shartflix/data/repositories/movie_repository.dart';
-import 'package:shartflix/data/repositories/user_repository.dart';
 import 'package:shartflix/pages/discover/discover_controller.dart';
 
 class DiscoverView extends View {
@@ -12,7 +11,6 @@ class DiscoverView extends View {
     return _DiscoverViewState(
       DiscoverController(
         DataMovieRepository(),
-        DataUserRepository(),
       ),
     );
   }
@@ -55,21 +53,19 @@ class _DiscoverViewState extends ViewState<DiscoverView, DiscoverController> {
                             scrollDirection: Axis.vertical,
                             itemBuilder: (context, index) {
                               final movie = controller.movies![index];
-                              print(movie.posterUrl);
                               return Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  if (controller.token != null)
-                                    CachedNetworkImage(
-                                      imageUrl: movie.posterUrl,
-                                      errorWidget: (context, url, error) {
-                                        return const Icon(
-                                          Icons.abc,
-                                          color: Colors.red,
-                                        );
-                                      },
-                                    )
+                                  CachedNetworkImage(
+                                    imageUrl: movie.posterUrl,
+                                    errorWidget: (context, url, error) {
+                                      return const Icon(
+                                        Icons.abc,
+                                        color: Colors.red,
+                                      );
+                                    },
+                                  )
                                 ],
                               );
                             },
