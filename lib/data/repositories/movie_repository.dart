@@ -9,11 +9,15 @@ class DataMovieRepository implements MovieRepository {
   final Dio _dio = Dio();
   final LoggerService _logger = LoggerService();
   final ISecureStorageService _secureStorage = SecureStorageService();
+  final List<Movie> _movies = [];
+
+  @override
+  List<Movie> get movies => _movies;
 
   static const String _tokenKey = 'auth_token';
 
   @override
-  Future<List<Movie>> getMovies({int page = 2}) async {
+  Future<void> getMovies({int page = 1}) async {
     final url = '$_baseUrl/movie/list/';
 
     try {
@@ -50,11 +54,12 @@ class DataMovieRepository implements MovieRepository {
           if (moviesData != null) {
             final moviesList = moviesData['movies'] as List<dynamic>?;
             if (moviesList != null) {
-              return moviesList.map((movieJson) => Movie.fromJson(movieJson as Map<String, dynamic>)).toList();
+              for (final movieJson in moviesList) {
+                _movies.add(Movie.fromJson(movieJson as Map<String, dynamic>));
+              }
             }
           }
         }
-        return [];
       } else {
         _logger.warning('Failed to get movies with status code: ${response.statusCode}');
         throw Exception('Failed to get movies with status: ${response.statusCode}');

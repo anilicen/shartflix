@@ -2,7 +2,9 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shartflix/constants.dart';
 import 'package:shartflix/data/repositories/user_repository.dart';
+import 'package:shartflix/navigator.dart';
 import 'package:shartflix/pages/login/login_controller.dart';
+import 'package:shartflix/widgets/shartflix_text_button.dart';
 import 'package:shartflix/widgets/shartflix_text_field.dart';
 import 'package:flutter/material.dart' hide View;
 
@@ -34,112 +36,127 @@ class _LoginViewState extends ViewState<LoginView, LoginController> {
       ),
       home: Scaffold(
         backgroundColor: backgroundColor,
-        body: SizedBox(
-          height: size.height,
-          width: size.width,
-          child: ControlledWidgetBuilder<LoginController>(
-            builder: (context, controller) {
-              return Container(
-                padding: EdgeInsets.only(top: padding.top + 20, left: 30, right: 30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Merhabalar',
-                      style: TextStyle(
-                        color: kWhite,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Tempus varius a vitae interdum id tortor elementum tristique eleifend at.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: kWhite,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    ShartflixTextField(
-                      onChanged: controller.onEmailChanged,
-                      hintText: 'Email',
-                      icon: 'assets/icons/message.svg',
-                    ),
-                    const SizedBox(height: 14),
-                    ShartflixTextField(
-                      onChanged: controller.onPasswordChanged,
-                      hintText: 'Password',
-                      icon: 'assets/icons/unlock.svg',
-                      optionalIcon: 'assets/icons/hide.svg',
-                      onOptionalIconTap: controller.toggleObscurePassword,
-                      isObscurePassword: controller.isObscurePassword,
-                    ),
-                    const SizedBox(height: 30),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Forgot Password?',
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: size.height,
+            width: size.width,
+            child: ControlledWidgetBuilder<LoginController>(
+              builder: (context, controller) {
+                return Container(
+                  padding: EdgeInsets.only(top: padding.top + 20, left: 39, right: 39),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Merhabalar',
                         style: TextStyle(
                           color: kWhite,
-                          fontSize: 12,
-                          decoration: TextDecoration.underline,
-                          decorationColor: kWhite,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    const ShartflixTextButton(
-                      text: 'Log in',
-                    ),
-                    const SizedBox(height: 36),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SocialLogInButton(
-                          icon: 'assets/icons/google_logo.svg',
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Tempus varius a vitae interdum id tortor elementum tristique eleifend at.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: kWhite,
+                          fontSize: 13,
                         ),
-                        SizedBox(width: 8),
-                        SocialLogInButton(
-                          icon: 'assets/icons/apple_logo.svg',
-                        ),
-                        SizedBox(width: 8),
-                        SocialLogInButton(
-                          icon: 'assets/icons/facebook_logo.svg',
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'You don\'t have an account?',
+                      ),
+                      const SizedBox(height: 40),
+                      ShartflixTextField(
+                        onChanged: controller.onEmailChanged,
+                        hintText: 'Email',
+                        icon: 'assets/icons/message.svg',
+                      ),
+                      const SizedBox(height: 14),
+                      ShartflixTextField(
+                        onChanged: controller.onPasswordChanged,
+                        hintText: 'Password',
+                        icon: 'assets/icons/unlock.svg',
+                        optionalIcon: 'assets/icons/hide.svg',
+                        onOptionalIconTap: controller.toggleObscurePassword,
+                        isObscurePassword: controller.isObscurePassword,
+                      ),
+                      const SizedBox(height: 30),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Forgot Password?',
                           style: TextStyle(
-                            color: kWhite.withOpacity(0.5),
+                            color: kWhite,
+                            fontSize: 12,
+                            decoration: TextDecoration.underline,
+                            decorationColor: kWhite,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      ShartflixTextButton(
+                        text: 'Log in',
+                        onPressed: controller.login,
+                        isLoading: controller.isLoading,
+                      ),
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          controller.loginError ?? '',
+                          style: const TextStyle(
+                            color: brandColor,
                             fontSize: 12,
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            // Navigate to sign up page
-                          },
-                          child: const Text(
-                            'Sign Up!',
+                      ),
+                      const SizedBox(height: 36),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SocialLogInButton(
+                            icon: 'assets/icons/google_logo.svg',
+                          ),
+                          SizedBox(width: 8),
+                          SocialLogInButton(
+                            icon: 'assets/icons/apple_logo.svg',
+                          ),
+                          SizedBox(width: 8),
+                          SocialLogInButton(
+                            icon: 'assets/icons/facebook_logo.svg',
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'You don\'t have an account?',
                             style: TextStyle(
-                              color: kWhite,
+                              color: kWhite.withOpacity(0.5),
                               fontSize: 12,
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
+                          TextButton(
+                            onPressed: () {
+                              ShartflixNavigator.navigateToRegisterView(context);
+                            },
+                            child: const Text(
+                              'Sign Up!',
+                              style: TextStyle(
+                                color: kWhite,
+                                fontSize: 12,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -173,43 +190,6 @@ class SocialLogInButton extends StatelessWidget {
           width: 20,
           height: 20,
           color: kWhite,
-        ),
-      ),
-    );
-  }
-}
-
-class ShartflixTextButton extends StatelessWidget {
-  final String text;
-  final double height;
-  final double borderRadius;
-
-  const ShartflixTextButton({
-    super.key,
-    required this.text,
-    this.height = 54,
-    this.borderRadius = 18,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        height: height,
-        decoration: BoxDecoration(
-          color: brandColor,
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: kWhite,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
         ),
       ),
     );

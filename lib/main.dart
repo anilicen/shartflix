@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:shartflix/data/repositories/movie_repository.dart';
 import 'package:shartflix/data/repositories/user_repository.dart';
-import 'package:shartflix/pages/login/login_view.dart';
-import 'package:shartflix/pages/register/register_view.dart';
+import 'package:shartflix/pages/discover/discover_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: RegisterView(),
+      home: DiscoverView(),
     );
   }
 }
@@ -118,12 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             GestureDetector(
-              onTap: () async {
-                var movies = await DataMovieRepository().getMovies();
-                for (var movie in movies) {
-                  print('Movie: ${movie.title}, Description: ${movie.description}, "Poster URL: ${movie.posterUrl}"');
-                }
-              },
+              onTap: () async {},
               child: Container(
                 color: Colors.red,
                 width: 100,
