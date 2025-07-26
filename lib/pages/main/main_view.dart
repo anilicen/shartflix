@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide View;
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shartflix/constants.dart';
+import 'package:shartflix/pages/add_photo/add_photo_view.dart';
 import 'package:shartflix/pages/discover/discover_view.dart';
 import 'package:shartflix/pages/main/main_controller.dart';
 
@@ -21,7 +22,7 @@ class _MainViewState extends ViewState<MainView, MainController> {
 
   final List<Widget> _screens = [
     DiscoverView(),
-    const ProfilePlaceholderView(),
+    const AddPhotoView(),
   ];
 
   @override
@@ -117,51 +118,3 @@ class _MainViewState extends ViewState<MainView, MainController> {
 }
 
 // Placeholder for Profile Screen
-class ProfilePlaceholderView extends StatelessWidget {
-  const ProfilePlaceholderView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: kWhite),
-        ),
-        backgroundColor: backgroundColor,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.person_outline,
-              size: 80,
-              color: kWhite,
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Profile Screen',
-              style: TextStyle(
-                color: kWhite,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Coming Soon...',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:shartflix/core/services/logger_service.dart';
 import 'package:shartflix/core/services/secure_storage_service.dart';
@@ -127,6 +129,81 @@ class DataUserRepository implements UserRepository {
     } catch (e, stackTrace) {
       _logger.error('Failed to register user', e, stackTrace);
       throw Exception('Failed to register user: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> addPhoto(File file) async {
+    final url = '$_baseUrl/user/upload_photo/';
+
+    try {
+      final token = await getAuthToken();
+      if (token == null) {
+        _logger.warning('No auth token found for add photo request');
+        throw Exception('User not authenticated');
+      }
+
+      _logger.info('Uploading photo');
+      _logger.debug('Request URL: $url');
+      _logger.debug('File path: ${file.path}');
+      _logger.debug('File exists: ${await file.exists()}');
+      _logger.debug('File size: ${await file.length()} bytes');
+
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(
+          file.path,
+        ),
+      });
+
+      final response = await _dio.post(
+        url,
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            // Remove Content-Type header - let Dio set it automatically for multipart
+          },
+        ),
+      );
+
+      _logger.debug('Add photo response: ${response.statusCode} - ${response.data}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _logger.info('Photo uploaded successfully');
+      } else {
+        _logger.warning('Failed to upload photo with status code: ${response.statusCode}');
+        throw Exception('Failed to upload photo with status: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        _logger.error('HTTP Error ${e.response!.statusCode}: ${e.response!.statusMessage}');
+        _logger.error('Response data: ${e.response!.data}');
+        _logger.error('Request headers: ${e.requestOptions.headers}');
+        _logger.error('Request data type: ${e.requestOptions.data.runtimeType}');
+
+        // More specific error message based on status code
+        String errorMessage = 'Failed to upload photo';
+        if (e.response!.statusCode == 400) {
+          errorMessage = 'Invalid photo format or size - please try a different image';
+        } else if (e.response!.statusCode == 401) {
+          errorMessage = 'Unauthorized - please login again';
+          await logout(); // Clear invalid token
+        } else if (e.response!.statusCode == 413) {
+          errorMessage = 'Photo file is too large - please choose a smaller image';
+        } else if (e.response!.statusCode == 415) {
+          errorMessage = 'Unsupported image format - please use JPG, PNG, or WEBP';
+        } else if (e.response!.statusCode == 500) {
+          errorMessage = 'Server error - please try again later';
+        }
+
+        throw Exception(errorMessage);
+      } else {
+        _logger.error('Network error: ${e.message}', e);
+        throw Exception('Network error: ${e.message}');
+      }
+    } catch (e, stackTrace) {
+      _logger.error('Failed to upload photo', e, stackTrace);
+      throw Exception('Failed to upload photo: ${e.toString()}');
     }
   }
 

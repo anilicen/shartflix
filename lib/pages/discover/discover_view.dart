@@ -10,6 +10,8 @@ import 'package:shartflix/pages/discover/discover_controller.dart';
 class DiscoverView extends View {
   static VoidCallback? _animateToFirstPageCallback;
 
+  const DiscoverView({super.key});
+
   static void animateToFirstPage() {
     _animateToFirstPageCallback?.call();
   }
@@ -206,7 +208,7 @@ class _DiscoverViewState extends ViewState<DiscoverView, DiscoverController> wit
                                                                   style: const TextStyle(
                                                                     color: kWhite,
                                                                     fontSize: 13,
-                                                                    fontWeight: FontWeight.w600,
+                                                                    fontWeight: FontWeight.w700,
                                                                   ),
                                                                   recognizer: TapGestureRecognizer()
                                                                     ..onTap = () {
