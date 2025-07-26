@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:shartflix/pages/discover/discover_view.dart';
 import 'package:shartflix/pages/login/login_view.dart';
+import 'package:shartflix/pages/main/main_view.dart';
 import 'package:shartflix/pages/register/register_view.dart';
 
 class ShartflixNavigator {
@@ -22,11 +22,11 @@ class ShartflixNavigator {
     );
   }
 
-  static Future<void> navigateToDiscoverView(BuildContext context) async {
+  static Future<void> navigateToMainView(BuildContext context) async {
     await Navigator.pushReplacement(
       context,
       CupertinoPageRoute(
-        builder: (context) => DiscoverView(),
+        builder: (context) => const MainView(),
       ),
     );
   }

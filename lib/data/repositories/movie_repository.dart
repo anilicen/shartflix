@@ -5,11 +5,17 @@ import 'package:shartflix/domain/entities/movie.dart';
 import 'package:shartflix/domain/repositories/movie_repository.dart';
 
 class DataMovieRepository implements MovieRepository {
+  static final _instance = DataMovieRepository._internal();
+  DataMovieRepository._internal();
+  factory DataMovieRepository() => _instance;
+
   final String _baseUrl = 'https://caseapi.servicelabs.tech';
   final Dio _dio = Dio();
   final LoggerService _logger = LoggerService();
   final ISecureStorageService _secureStorage = SecureStorageService();
   final List<Movie> _movies = [];
+  final int moviePerPage = 5;
+  int? _savedIndex;
 
   @override
   List<Movie> get movies => _movies;
@@ -28,7 +34,18 @@ class DataMovieRepository implements MovieRepository {
   }
 
   @override
+  void saveIndex(int index) {
+    _savedIndex = index;
+  }
+
+  @override
+  int? getSavedIndex() {
+    return _savedIndex;
+  }
+
+  @override
   Future<void> getMovies({int page = 1}) async {
+    if (moviePerPage * (page - 1) < _movies.length) return;
     final url = '$_baseUrl/movie/list/';
 
     try {
