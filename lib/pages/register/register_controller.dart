@@ -152,6 +152,7 @@ class RegisterController extends Controller {
     // Proceed with registration if validation passes
     try {
       await _userRepository.register(username, password, email);
+      ShartflixNavigator.navigateToMainView(getContext());
       // Registration successful - you might want to navigate to login or home screen
     } catch (e) {
       registerError = 'Registration failed: ${e.toString()}';

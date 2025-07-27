@@ -1,5 +1,6 @@
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:shartflix/domain/repositories/user_repository.dart';
+import 'package:shartflix/navigator.dart';
 
 class LoginController extends Controller {
   LoginController(UserRepository userRepository) : _userRepository = userRepository;
@@ -72,11 +73,13 @@ class LoginController extends Controller {
     // Proceed with login if validation passes
     try {
       await _userRepository.login(email, password);
+      ShartflixNavigator.navigateToMainView(getContext());
     } catch (e) {
       loginError = 'Login failed: ${e.toString()}';
     }
     isLoading = false;
     refreshUI();
+
     return;
   }
 

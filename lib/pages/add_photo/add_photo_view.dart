@@ -32,16 +32,55 @@ class _AddPhotoViewState extends ViewState<AddPhotoView, AddPhotoController> {
       backgroundColor: backgroundColor,
       body: SingleChildScrollView(
         child: SizedBox(
-          height: size.height - 74,
+          height: size.height,
           width: size.width,
           child: ControlledWidgetBuilder<AddPhotoController>(
             builder: (context, controller) {
               return Container(
-                padding: EdgeInsets.only(top: padding.top + 20, left: 39, right: 39),
+                padding: EdgeInsets.only(top: padding.top + 20, bottom: 25, left: 39, right: 39),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 44,
+                          width: 44,
+                          decoration: BoxDecoration(
+                            color: kWhite.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: kWhite.withOpacity(0.2), width: 1),
+                          ),
+                          child: IconButton(
+                            icon: SvgPicture.asset(
+                              'assets/icons/arrow_left.svg',
+                              height: 20,
+                              width: 20,
+                              color: kWhite,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                        Text(
+                          'Profile Details',
+                          style: TextStyle(
+                            color: kWhite,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Container(
+                          height: 44,
+                          width: 44,
+                          color: Colors.transparent,
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 35),
                     const Text(
                       'Add a Photo',
                       style: TextStyle(
@@ -88,7 +127,7 @@ class _AddPhotoViewState extends ViewState<AddPhotoView, AddPhotoController> {
                               ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    Spacer(),
                     if (controller.selectedImage != null)
                       TextButton(
                         onPressed: controller.removeImage,

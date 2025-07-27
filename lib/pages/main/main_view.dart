@@ -2,9 +2,9 @@ import 'package:flutter/material.dart' hide View;
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shartflix/constants.dart';
-import 'package:shartflix/pages/add_photo/add_photo_view.dart';
 import 'package:shartflix/pages/discover/discover_view.dart';
 import 'package:shartflix/pages/main/main_controller.dart';
+import 'package:shartflix/pages/profile/profile_view.dart';
 
 class MainView extends View {
   const MainView({super.key});
@@ -22,7 +22,7 @@ class _MainViewState extends ViewState<MainView, MainController> {
 
   final List<Widget> _screens = [
     DiscoverView(),
-    const AddPhotoView(),
+    const ProfileView(),
   ];
 
   @override

@@ -6,12 +6,13 @@ import 'package:shartflix/domain/repositories/movie_repository.dart';
 class DiscoverController extends Controller {
   DiscoverController(MovieRepository movieRepository) : _movieRepository = movieRepository;
   final MovieRepository _movieRepository;
+
   List<Movie>? movies;
   int moviePerPage = 5;
   int? savedIndex;
+
   final Set<int> _loadedPages = {};
   final Map<int, bool> _expandedDescriptions = {};
-  final Map<int, bool> _likedMovies = {};
 
   // Animation properties
   AnimationController? _likeAnimationController;
@@ -23,10 +24,13 @@ class DiscoverController extends Controller {
 
     getSavedIndex();
     if (savedIndex == null) {
+      // First opening of the Discover page
+      await _movieRepository.getFavoriteMovies();
       await _movieRepository.getMovies(page: 1);
       _loadedPages.add(1); // Mark page 1 as loaded
     }
-    movies = _movieRepository.movies;
+
+    movies = _movieRepository.movies.map((m) => m.copyWith()).toList();
     refreshUI();
   }
 
@@ -55,7 +59,7 @@ class DiscoverController extends Controller {
 
       if (!_loadedPages.contains(pageToLoad)) {
         await _movieRepository.getMovies(page: pageToLoad);
-        movies = _movieRepository.movies;
+        movies = _movieRepository.movies.map((m) => m.copyWith()).toList();
         _loadedPages.add(pageToLoad);
         refreshUI();
       }
@@ -119,23 +123,43 @@ class DiscoverController extends Controller {
   }
 
   bool isMovieLiked(int index) {
-    return _likedMovies[index] == true;
+    if (movies != null && index < movies!.length) {
+      print('Movie ID: ${movies![index]}, Is Liked: ${movies![index].isLiked}');
+      return movies![index].isLiked;
+    }
+    return false;
   }
 
-  void toggleMovieLike(int index) {
-    _likedMovies[index] = !(_likedMovies[index] ?? false);
-    refreshUI();
+  Future<void> toggleMovieLike(int index) async {
+    if (movies != null && index < movies!.length) {
+      final movie = movies![index];
+
+      try {
+        // Call the repository method to toggle favorite on server
+        _movieRepository.toggleFavoriteMovie(movie.id);
+
+        // Update local movies list with the new state from repository
+
+        movies![index] = movie.copyWith(isLiked: !movie.isLiked);
+
+        refreshUI();
+      } catch (e) {
+        // Handle error - could show a snackbar or error message
+        // For now, just log the error and don't update UI
+        print('Error toggling favorite: $e');
+      }
+    }
   }
 
   void initializeLikeAnimation(TickerProvider vsync) {
     if (_likeAnimationController == null) {
       _likeAnimationController = AnimationController(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 200),
         vsync: vsync,
       );
       _likeAnimation = Tween<double>(
         begin: 1.0,
-        end: 1.3,
+        end: 1.2,
       ).animate(CurvedAnimation(
         parent: _likeAnimationController!,
         curve: Curves.elasticOut,

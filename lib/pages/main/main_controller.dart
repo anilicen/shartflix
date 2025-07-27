@@ -18,6 +18,5 @@ class MainController extends Controller {
   @override
   Future<void> onInitState() async {
     super.onInitState();
-    // Perform any initial setup here
   }
 }

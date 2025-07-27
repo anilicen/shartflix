@@ -5,18 +5,20 @@ import 'package:shartflix/constants.dart';
 
 class ShartflixTextButton extends StatelessWidget {
   final String text;
-  final double height;
   final double borderRadius;
   final Function() onPressed;
   final bool isLoading;
+  final double verticalPadding;
+  final double horizontalPadding;
 
   const ShartflixTextButton({
     super.key,
     required this.text,
-    this.height = 54,
     this.borderRadius = 18,
     required this.onPressed,
     this.isLoading = false,
+    this.verticalPadding = 17,
+    this.horizontalPadding = 0,
   });
 
   @override
@@ -26,7 +28,7 @@ class ShartflixTextButton extends StatelessWidget {
         isLoading ? null : onPressed();
       },
       child: Container(
-        height: height,
+        padding: EdgeInsets.symmetric(vertical: verticalPadding, horizontal: horizontalPadding),
         decoration: BoxDecoration(
           color: brandColor,
           borderRadius: BorderRadius.circular(borderRadius),

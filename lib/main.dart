@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shartflix/data/repositories/user_repository.dart';
-import 'package:shartflix/pages/main/main_view.dart';
+import 'package:shartflix/pages/splash/splash_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MainView(),
+      home: const SplashView(),
     );
   }
 }

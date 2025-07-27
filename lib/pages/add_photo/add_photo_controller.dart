@@ -73,7 +73,9 @@ class AddPhotoController extends Controller {
       await _userRepository.addPhoto(selectedImage!);
       // Handle successful upload
       print('Photo uploaded successfully');
+
       isUploading = false;
+      Navigator.of(context).pop(); // Navigate back or show success message
       refreshUI();
 
       // You can navigate back or show success message here

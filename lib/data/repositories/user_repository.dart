@@ -7,11 +7,19 @@ import 'package:shartflix/domain/entities/user.dart';
 import 'package:shartflix/domain/repositories/user_repository.dart';
 
 class DataUserRepository implements UserRepository {
+  static final _instance = DataUserRepository._internal();
+  DataUserRepository._internal();
+  factory DataUserRepository() => _instance;
+
   final String _baseUrl = 'https://caseapi.servicelabs.tech';
   final Dio _dio = Dio();
   final LoggerService _logger = LoggerService();
   final ISecureStorageService _secureStorage = SecureStorageService();
   User? _currentUser;
+
+  @override
+  User? get currentUser => _currentUser;
+
   static const String _tokenKey = 'auth_token';
 
   @override
@@ -170,6 +178,9 @@ class DataUserRepository implements UserRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         _logger.info('Photo uploaded successfully');
+        _currentUser = _currentUser!.copyWith(
+          photoUrl: response.data['data']['photoUrl'] as String?,
+        );
       } else {
         _logger.warning('Failed to upload photo with status code: ${response.statusCode}');
         throw Exception('Failed to upload photo with status: ${response.statusCode}');

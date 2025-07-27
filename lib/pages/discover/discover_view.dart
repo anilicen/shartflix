@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shartflix/constants.dart';
+import 'package:shartflix/core/helpers/fast_page_scroll_physics.dart';
 import 'package:shartflix/data/repositories/movie_repository.dart';
 import 'package:shartflix/pages/discover/discover_controller.dart';
 
@@ -75,6 +76,8 @@ class _DiscoverViewState extends ViewState<DiscoverView, DiscoverController> wit
                                 ),
                                 itemCount: controller.movies?.length ?? 0,
                                 scrollDirection: Axis.vertical,
+                                pageSnapping: true,
+                                physics: const FastPageScrollPhysics(parent: PageScrollPhysics()),
                                 itemBuilder: (context, index) {
                                   controller.saveIndex(index); //saving index for later use in data repository
                                   controller.getMovies(index); // getMovies every time index is %5 = 0,
@@ -244,10 +247,10 @@ class _DiscoverViewState extends ViewState<DiscoverView, DiscoverController> wit
                                         bottom: 100,
                                         right: 16,
                                         child: GestureDetector(
-                                          onTap: () {
+                                          onTap: () async {
                                             controller.initializeLikeAnimation(this);
-                                            controller.toggleMovieLike(index);
                                             controller.triggerLikeAnimation();
+                                            await controller.toggleMovieLike(index);
                                           },
                                           child: AnimatedBuilder(
                                             animation: controller.likeAnimation ?? const AlwaysStoppedAnimation(1.0),
