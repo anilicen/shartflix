@@ -1,11 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:shartflix/domain/entities/movie.dart';
 import 'package:shartflix/domain/repositories/movie_repository.dart';
+import 'package:shartflix/core/language_notifier.dart';
 
 class DiscoverController extends Controller {
   DiscoverController(MovieRepository movieRepository) : _movieRepository = movieRepository;
   final MovieRepository _movieRepository;
+  StreamSubscription? _languageSubscription;
 
   List<Movie>? movies;
   int moviePerPage = 5;
@@ -36,11 +40,15 @@ class DiscoverController extends Controller {
 
   @override
   void initListeners() {
-    // TODO: implement initListeners
+    // Listen for language changes and refresh UI
+    _languageSubscription = LanguageNotifier().languageStream.listen((_) {
+      refreshUI();
+    });
   }
 
   @override
   void onDisposed() {
+    _languageSubscription?.cancel();
     disposeLikeAnimation();
     super.onDisposed();
   }
@@ -80,9 +88,9 @@ class DiscoverController extends Controller {
       return text;
     }
 
-    const showMoreText = " Show more";
+    final showMoreText = " ${'show_more'.tr()}";
     final showMorePainter = TextPainter(
-      text: const TextSpan(text: showMoreText, style: textStyle),
+      text: TextSpan(text: showMoreText, style: textStyle),
       textDirection: TextDirection.ltr,
     );
     showMorePainter.layout();

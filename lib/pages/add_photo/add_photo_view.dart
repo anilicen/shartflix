@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shartflix/constants.dart';
@@ -66,7 +67,7 @@ class _AddPhotoViewState extends ViewState<AddPhotoView, AddPhotoController> {
                           ),
                         ),
                         Text(
-                          'Profile Details',
+                          'profile_details'.tr(),
                           style: TextStyle(
                             color: kWhite,
                             fontSize: 15,
@@ -81,8 +82,8 @@ class _AddPhotoViewState extends ViewState<AddPhotoView, AddPhotoController> {
                       ],
                     ),
                     const SizedBox(height: 35),
-                    const Text(
-                      'Add a Photo',
+                    Text(
+                      'add_a_photo'.tr(),
                       style: TextStyle(
                         color: kWhite,
                         fontSize: 18,
@@ -90,8 +91,8 @@ class _AddPhotoViewState extends ViewState<AddPhotoView, AddPhotoController> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Please upload a photo to complete your profile.',
+                    Text(
+                      'add_a_photo_description'.tr(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: kWhite,
@@ -154,7 +155,7 @@ class _AddPhotoViewState extends ViewState<AddPhotoView, AddPhotoController> {
                       ),
                     const SizedBox(height: 20),
                     ShartflixTextButton(
-                      text: 'Continue',
+                      text: 'continue'.tr(),
                       onPressed: () {
                         if (!controller.isUploading) {
                           controller.uploadPhoto(context);

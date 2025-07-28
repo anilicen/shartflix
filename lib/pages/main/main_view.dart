@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide View;
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:shartflix/constants.dart';
 import 'package:shartflix/pages/discover/discover_view.dart';
 import 'package:shartflix/pages/main/main_controller.dart';
@@ -53,7 +54,7 @@ class _MainViewState extends ViewState<MainView, MainController> {
                       controller: controller,
                       index: 0,
                       assetName: 'assets/icons/home.svg',
-                      label: 'Discover',
+                      label: 'discover'.tr(),
                     ),
                     const SizedBox(width: 16),
                     // Profile Tab
@@ -61,7 +62,7 @@ class _MainViewState extends ViewState<MainView, MainController> {
                       controller: controller,
                       index: 1,
                       assetName: 'assets/icons/profile.svg',
-                      label: 'Profile',
+                      label: 'profile'.tr(),
                     ),
                   ],
                 ),

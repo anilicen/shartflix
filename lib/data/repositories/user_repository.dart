@@ -94,6 +94,89 @@ class DataUserRepository implements UserRepository {
   }
 
   @override
+  Future<void> signInWithGoogle({
+    required String idToken,
+    required String accessToken,
+    required String email,
+    required String displayName,
+    required String photoUrl,
+  }) async {
+    _logger.info('Google Sign-In attempt for email: $email');
+
+    // First, try to register the user
+    try {
+      _logger.info('Attempting to register new user with Google credentials');
+      await register(displayName, email, email); // Use existing register method
+      _logger.info('Google registration successful for email: $email');
+
+      // Update user photo URL after successful registration
+      if (photoUrl.isNotEmpty && _currentUser != null) {
+        _currentUser = _currentUser!.copyWith(photoUrl: photoUrl);
+      }
+    } catch (e) {
+      _logger.info('Google registration failed, trying login for email: $email');
+      _logger.debug('Registration error: ${e.toString()}');
+
+      // If registration fails, try to login using existing login method
+      try {
+        await login(email, email); // Use existing login method
+        _logger.info('Google login successful for email: $email');
+
+        // Update user photo URL after successful login
+        if (photoUrl.isNotEmpty && _currentUser != null) {
+          _currentUser = _currentUser!.copyWith(photoUrl: photoUrl);
+        }
+      } catch (loginError) {
+        _logger.error('Both Google registration and login failed for email: $email');
+        _logger.error('Registration error: ${e.toString()}');
+        _logger.error('Login error: ${loginError.toString()}');
+        throw Exception('Google Sign-In failed: Unable to register or login user');
+      }
+    }
+  }
+
+  @override
+  Future<void> signInWithFacebook({
+    required String accessToken,
+    required String email,
+    required String displayName,
+    required String photoUrl,
+  }) async {
+    _logger.info('Facebook Sign-In attempt for email: $email');
+
+    // First, try to register the user
+    try {
+      _logger.info('Attempting to register new user with Facebook credentials');
+      await register(displayName, email, email); // Use existing register method
+      _logger.info('Facebook registration successful for email: $email');
+
+      // Update user photo URL after successful registration
+      if (photoUrl.isNotEmpty && _currentUser != null) {
+        _currentUser = _currentUser!.copyWith(photoUrl: photoUrl);
+      }
+    } catch (e) {
+      _logger.info('Facebook registration failed, trying login for email: $email');
+      _logger.debug('Registration error: ${e.toString()}');
+
+      // If registration fails, try to login using existing login method
+      try {
+        await login(email, email); // Use existing login method
+        _logger.info('Facebook login successful for email: $email');
+
+        // Update user photo URL after successful login
+        if (photoUrl.isNotEmpty && _currentUser != null) {
+          _currentUser = _currentUser!.copyWith(photoUrl: photoUrl);
+        }
+      } catch (loginError) {
+        _logger.error('Both Facebook registration and login failed for email: $email');
+        _logger.error('Registration error: ${e.toString()}');
+        _logger.error('Login error: ${loginError.toString()}');
+        throw Exception('Facebook Sign-In failed: Unable to register or login user');
+      }
+    }
+  }
+
+  @override
   Future<void> register(String username, String password, String email) async {
     final url = '$_baseUrl/user/register/';
 

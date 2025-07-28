@@ -1,12 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:shartflix/constants.dart';
 import 'package:shartflix/data/repositories/movie_repository.dart';
 import 'package:shartflix/data/repositories/user_repository.dart';
 import 'package:shartflix/pages/profile/profile_controller.dart';
 import 'package:flutter/material.dart' hide View;
 import 'package:shartflix/widgets/shartflix_text_button.dart';
+import 'package:shartflix/widgets/limited_offer_bottom_sheet.dart';
 
 class ProfileView extends View {
   const ProfileView({super.key});
@@ -48,7 +50,7 @@ class _ProfileViewState extends ViewState<ProfileView, ProfileController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Profile Details',
+                        'profile_details'.tr(),
                         style: TextStyle(
                           color: kWhite,
                           fontSize: 15,
@@ -79,7 +81,7 @@ class _ProfileViewState extends ViewState<ProfileView, ProfileController> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'ID: ${controller.user!.id.substring(0, 6)}',
+                                    '${'id'.tr()}: ${controller.user!.id.substring(0, 6)}',
                                     style: TextStyle(
                                       color: kWhite.withOpacity(0.5),
                                       fontSize: 12,
@@ -90,7 +92,7 @@ class _ProfileViewState extends ViewState<ProfileView, ProfileController> {
                             ),
                             const SizedBox(width: 8),
                             ShartflixTextButton(
-                              text: 'Add Photo',
+                              text: 'add_photo'.tr(),
                               borderRadius: 8,
                               verticalPadding: 10,
                               horizontalPadding: 19,
@@ -100,11 +102,19 @@ class _ProfileViewState extends ViewState<ProfileView, ProfileController> {
                             )
                           ],
                         ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 15),
+                  ShartflixTextButton(
+                    text: 'change_language'.tr(),
+                    borderRadius: 8,
+                    verticalPadding: 5,
+                    horizontalPadding: 5,
+                    onPressed: () => controller.navigateToLanguageSettingsView(context),
+                  ),
+                  const SizedBox(height: 15),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14),
-                    child: const Text(
-                      'Liked Movies',
+                    child: Text(
+                      'liked_movies'.tr(),
                       style: TextStyle(
                         color: kWhite,
                         fontSize: 13,
@@ -224,31 +234,41 @@ class _LimitedOfferButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(9),
-      decoration: BoxDecoration(
-        color: brandColor,
-        borderRadius: BorderRadius.circular(53),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            'assets/icons/gem.svg',
-            width: 22,
-            height: 22,
-          ),
-          SizedBox(width: 4),
-          Text(
-            'Limited Offer',
-            style: TextStyle(
-              color: kWhite,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => const LimitedOfferBottomSheet(),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(9),
+        decoration: BoxDecoration(
+          color: brandColor,
+          borderRadius: BorderRadius.circular(53),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/icons/gem.svg',
+              width: 22,
+              height: 22,
             ),
-          )
-        ],
+            SizedBox(width: 4),
+            Text(
+              'limited_offer'.tr(),
+              style: TextStyle(
+                color: kWhite,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

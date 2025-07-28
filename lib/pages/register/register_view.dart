@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide View;
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:shartflix/constants.dart';
 import 'package:shartflix/data/repositories/user_repository.dart';
 import 'package:shartflix/pages/login/login_view.dart';
@@ -23,7 +23,6 @@ class _RegisterViewState extends ViewState<RegisterView, RegisterController> {
   _RegisterViewState(RegisterController controller) : super(controller);
 
   @override
-  // TODO: implement view
   Widget get view {
     Size size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
@@ -42,19 +41,19 @@ class _RegisterViewState extends ViewState<RegisterView, RegisterController> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Merhabalar',
-                      style: TextStyle(
+                    Text(
+                      'hello'.tr(),
+                      style: const TextStyle(
                         color: kWhite,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Tempus varius a vitae interdum id tortor elementum tristique eleifend at.',
+                    Text(
+                      'welcome_message'.tr(),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: kWhite,
                         fontSize: 13,
                       ),
@@ -62,19 +61,19 @@ class _RegisterViewState extends ViewState<RegisterView, RegisterController> {
                     const SizedBox(height: 40),
                     ShartflixTextField(
                       onChanged: controller.onUsernameChanged,
-                      hintText: 'Name and Surname',
+                      hintText: 'name_surname'.tr(),
                       icon: 'assets/icons/add.svg',
                     ),
                     const SizedBox(height: 14),
                     ShartflixTextField(
                       onChanged: controller.onEmailChanged,
-                      hintText: 'Email',
+                      hintText: 'email'.tr(),
                       icon: 'assets/icons/message.svg',
                     ),
                     const SizedBox(height: 14),
                     ShartflixTextField(
                       onChanged: controller.onPasswordChanged,
-                      hintText: 'Password',
+                      hintText: 'password'.tr(),
                       icon: 'assets/icons/unlock.svg',
                       optionalIcon: 'assets/icons/hide.svg',
                       onOptionalIconTap: controller.toggleObscurePassword,
@@ -83,7 +82,7 @@ class _RegisterViewState extends ViewState<RegisterView, RegisterController> {
                     const SizedBox(height: 14),
                     ShartflixTextField(
                       onChanged: controller.onConfirmPasswordChanged,
-                      hintText: 'Confirm Password',
+                      hintText: 'confirm_password'.tr(),
                       icon: 'assets/icons/unlock.svg',
                       optionalIcon: 'assets/icons/hide.svg',
                       onOptionalIconTap: controller.toggleObscureConfirmPassword,
@@ -91,7 +90,7 @@ class _RegisterViewState extends ViewState<RegisterView, RegisterController> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Kullanıcı sözleşmesini okudum ve kabul ediyorum. Bu sözelşmeyi okuyarak devam ediniz lütfen.',
+                      'policy_agreement'.tr(),
                       style: TextStyle(
                         color: kWhite.withOpacity(0.5),
                         fontSize: 12,
@@ -99,9 +98,9 @@ class _RegisterViewState extends ViewState<RegisterView, RegisterController> {
                     ),
                     const SizedBox(height: 30),
                     ShartflixTextButton(
-                      text: "Register Now",
+                      text: "register".tr(),
                       onPressed: controller.register,
-                      isLoading: controller.isLoading,
+                      isLoading: controller.isLoading || controller.isGoogleLoading || controller.isFacebookLoading,
                     ),
                     const SizedBox(height: 8),
                     Align(
@@ -115,19 +114,22 @@ class _RegisterViewState extends ViewState<RegisterView, RegisterController> {
                       ),
                     ),
                     const SizedBox(height: 28),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SocialLogInButton(
                           icon: 'assets/icons/google_logo.svg',
+                          onPressed: controller.signInWithGoogle,
                         ),
                         SizedBox(width: 8),
                         SocialLogInButton(
                           icon: 'assets/icons/apple_logo.svg',
+                          onPressed: () {},
                         ),
                         SizedBox(width: 8),
                         SocialLogInButton(
                           icon: 'assets/icons/facebook_logo.svg',
+                          onPressed: controller.signInWithFacebook,
                         ),
                       ],
                     ),
@@ -135,7 +137,7 @@ class _RegisterViewState extends ViewState<RegisterView, RegisterController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'You have an account?',
+                          'already_have_account'.tr(),
                           style: TextStyle(
                             color: kWhite.withOpacity(0.5),
                             fontSize: 12,
@@ -145,9 +147,9 @@ class _RegisterViewState extends ViewState<RegisterView, RegisterController> {
                           onPressed: () {
                             controller.navigateToLoginView(context);
                           },
-                          child: const Text(
-                            'Log In!',
-                            style: TextStyle(
+                          child: Text(
+                            'sign_in'.tr(),
+                            style: const TextStyle(
                               color: kWhite,
                               fontSize: 12,
                             ),

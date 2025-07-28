@@ -1,5 +1,6 @@
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:shartflix/constants.dart';
 import 'package:shartflix/data/repositories/user_repository.dart';
 import 'package:shartflix/navigator.dart';
@@ -45,19 +46,19 @@ class _LoginViewState extends ViewState<LoginView, LoginController> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Merhabalar',
-                      style: TextStyle(
+                    Text(
+                      'hello'.tr(),
+                      style: const TextStyle(
                         color: kWhite,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Tempus varius a vitae interdum id tortor elementum tristique eleifend at.',
+                    Text(
+                      'welcome_message'.tr(),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: kWhite,
                         fontSize: 13,
                       ),
@@ -65,24 +66,24 @@ class _LoginViewState extends ViewState<LoginView, LoginController> {
                     const SizedBox(height: 40),
                     ShartflixTextField(
                       onChanged: controller.onEmailChanged,
-                      hintText: 'Email',
+                      hintText: 'email'.tr(),
                       icon: 'assets/icons/message.svg',
                     ),
                     const SizedBox(height: 14),
                     ShartflixTextField(
                       onChanged: controller.onPasswordChanged,
-                      hintText: 'Password',
+                      hintText: 'password'.tr(),
                       icon: 'assets/icons/unlock.svg',
                       optionalIcon: 'assets/icons/hide.svg',
                       onOptionalIconTap: controller.toggleObscurePassword,
                       isObscurePassword: controller.isObscurePassword,
                     ),
                     const SizedBox(height: 30),
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Forgot Password?',
-                        style: TextStyle(
+                        'forgot_password'.tr(),
+                        style: const TextStyle(
                           color: kWhite,
                           fontSize: 12,
                           decoration: TextDecoration.underline,
@@ -93,9 +94,9 @@ class _LoginViewState extends ViewState<LoginView, LoginController> {
                     ),
                     const SizedBox(height: 24),
                     ShartflixTextButton(
-                      text: 'Log in',
+                      text: 'login'.tr(),
                       onPressed: controller.login,
-                      isLoading: controller.isLoading,
+                      isLoading: controller.isLoading || controller.isGoogleLoading || controller.isFacebookLoading,
                     ),
                     const SizedBox(height: 8),
                     Align(
@@ -109,19 +110,22 @@ class _LoginViewState extends ViewState<LoginView, LoginController> {
                       ),
                     ),
                     const SizedBox(height: 36),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SocialLogInButton(
                           icon: 'assets/icons/google_logo.svg',
+                          onPressed: controller.signInWithGoogle,
                         ),
                         SizedBox(width: 8),
                         SocialLogInButton(
                           icon: 'assets/icons/apple_logo.svg',
+                          onPressed: () {},
                         ),
                         SizedBox(width: 8),
                         SocialLogInButton(
                           icon: 'assets/icons/facebook_logo.svg',
+                          onPressed: controller.signInWithFacebook,
                         ),
                       ],
                     ),
@@ -129,7 +133,7 @@ class _LoginViewState extends ViewState<LoginView, LoginController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'You don\'t have an account?',
+                          'dont_have_account'.tr(),
                           style: TextStyle(
                             color: kWhite.withOpacity(0.5),
                             fontSize: 12,
@@ -139,9 +143,9 @@ class _LoginViewState extends ViewState<LoginView, LoginController> {
                           onPressed: () {
                             ShartflixNavigator.navigateToRegisterView(context);
                           },
-                          child: const Text(
-                            'Sign Up!',
-                            style: TextStyle(
+                          child: Text(
+                            'sign_up'.tr(),
+                            style: const TextStyle(
                               color: kWhite,
                               fontSize: 12,
                             ),
@@ -162,30 +166,35 @@ class _LoginViewState extends ViewState<LoginView, LoginController> {
 
 class SocialLogInButton extends StatelessWidget {
   final String icon;
+  final Function() onPressed;
   const SocialLogInButton({
     super.key,
     required this.icon,
+    required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      width: 60,
-      decoration: BoxDecoration(
-        color: kWhite.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: kWhite.withOpacity(0.2),
-          width: 1,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: 60,
+        width: 60,
+        decoration: BoxDecoration(
+          color: kWhite.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: kWhite.withOpacity(0.2),
+            width: 1,
+          ),
         ),
-      ),
-      child: Center(
-        child: SvgPicture.asset(
-          icon,
-          width: 20,
-          height: 20,
-          color: kWhite,
+        child: Center(
+          child: SvgPicture.asset(
+            icon,
+            width: 20,
+            height: 20,
+            color: kWhite,
+          ),
         ),
       ),
     );

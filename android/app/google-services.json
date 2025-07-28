@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "327571670515",
+    "project_id": "shartflix-1faa3",
+    "storage_bucket": "shartflix-1faa3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327571670515:android:b304026823de8993c27e86",
+        "android_client_info": {
+          "package_name": "com.example.shartflix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327571670515-oroa8vpo1f30a7crngd91pp4pb5fdh7h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shartflix",
+            "certificate_hash": "291865177c8af4be2c1b95a27d9590cabd916550"
+          }
+        },
+        {
+          "client_id": "327571670515-8tqift813chtsfdlcs9ghebdekmrdv33.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAROWTscfEhmjgNhbiL4M3kRnsW6cn3h0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327571670515-8tqift813chtsfdlcs9ghebdekmrdv33.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

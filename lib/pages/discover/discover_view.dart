@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart' hide View;
 import 'package:flutter/gestures.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
@@ -207,7 +208,7 @@ class _DiscoverViewState extends ViewState<DiscoverView, DiscoverController> wit
                                                               if (controller.needsShowMore(
                                                                   movie.description, size.width - 120))
                                                                 TextSpan(
-                                                                  text: " Show more",
+                                                                  text: "show_more".tr(),
                                                                   style: const TextStyle(
                                                                     color: kWhite,
                                                                     fontSize: 13,
@@ -226,9 +227,9 @@ class _DiscoverViewState extends ViewState<DiscoverView, DiscoverController> wit
                                                           onTap: () {
                                                             controller.toggleDescriptionExpansion(index);
                                                           },
-                                                          child: const Text(
-                                                            "Show less",
-                                                            style: TextStyle(
+                                                          child: Text(
+                                                            "show_less".tr(),
+                                                            style: const TextStyle(
                                                               color: Colors.grey,
                                                               fontSize: 13,
                                                               fontWeight: FontWeight.w500,

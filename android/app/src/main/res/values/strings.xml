@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Shartflix</string>
+    <!-- Replace with your actual Facebook App ID -->
+    <string name="facebook_app_id">1933499527413454</string>
+    <!-- Using App Secret as Client Token (common for mobile apps) -->
+    <string name="facebook_client_token">3a8090c764f2159ef0c0dc1ec874ba40</string>
+    <!-- Replace with your actual Facebook App ID -->
+    <string name="fb_login_protocol_scheme">fb1933499527413454</string>
+</resources>

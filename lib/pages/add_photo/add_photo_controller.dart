@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:shartflix/domain/repositories/user_repository.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -44,14 +45,14 @@ class AddPhotoController extends Controller {
 
   Future<void> uploadPhoto(BuildContext context) async {
     if (selectedImage == null) {
-      errorMessage = 'No image selected';
+      errorMessage = 'no_image_selected'.tr();
       refreshUI();
       return;
     }
 
     // Validate file exists and size
     if (!await selectedImage!.exists()) {
-      errorMessage = 'Selected image file not found';
+      errorMessage = 'image_file_not_found'.tr();
       refreshUI();
       return;
     }
@@ -59,7 +60,7 @@ class AddPhotoController extends Controller {
     final fileSize = await selectedImage!.length();
     const maxFileSize = 10 * 1024 * 1024; // 10MB limit
     if (fileSize > maxFileSize) {
-      errorMessage = 'Image file is too large (max 10MB)';
+      errorMessage = 'image_too_large'.tr();
       refreshUI();
       return;
     }
@@ -72,7 +73,7 @@ class AddPhotoController extends Controller {
     try {
       await _userRepository.addPhoto(selectedImage!);
       // Handle successful upload
-      print('Photo uploaded successfully');
+      print('${'photo_uploaded_successfully'.tr()}');
 
       isUploading = false;
       Navigator.of(context).pop(); // Navigate back or show success message
@@ -87,7 +88,7 @@ class AddPhotoController extends Controller {
         errorMessage = errorMessage!.substring(11); // Remove "Exception: " prefix
       }
       refreshUI();
-      print('Upload failed: $errorMessage');
+      print('${'upload_failed'.tr()}: $errorMessage');
     }
   }
 

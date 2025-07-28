@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shartflix/pages/add_photo/add_photo_view.dart';
+import 'package:shartflix/pages/language_settings/language_settings_view.dart';
 import 'package:shartflix/pages/login/login_view.dart';
 import 'package:shartflix/pages/main/main_view.dart';
 import 'package:shartflix/pages/register/register_view.dart';
@@ -37,6 +38,15 @@ class ShartflixNavigator {
       context,
       CupertinoPageRoute(
         builder: (context) => const AddPhotoView(),
+      ),
+    );
+  }
+
+  static Future<void> navigateToLanguageSettingsView(BuildContext context) async {
+    await Navigator.push(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => const LanguageSettingsView(),
       ),
     );
   }
